@@ -1,0 +1,13 @@
+steer_debug:
+  ros__parameters:
+    rate: 10.0
+    output_root: "/logs"
+    world_file: "/worlds/minicar_course_traced.sdf"
+    model_name: "tt02"
+    vehicle_params_file: "/config/vehicle_params.yaml"
+    safety_params_file: "/config/safety_params.yaml"
+    freshness_limit: 0.25
+    preflight_timeout: 2.5
+    control_start_timeout: 10.0
+    left_joint: "front_left_wheel_steering_joint"
+    right_joint: "front_right_wheel_steering_joint"

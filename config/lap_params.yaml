@@ -1,0 +1,25 @@
+# 周回判定のパラメータ。
+#
+# 判定は /ground_truth/odom（シミュレータ内の真の姿勢）のみを使う。
+# /odom は車輪回転からの推測航法で、空転していても「走行中」を返すため
+# 評価には使えない（実測: 真値 6.45m の走行を 55m と誤報告した）。
+
+lap_node:
+  ros__parameters:
+    # world SDF の tt02 <include><pose> と揃えること。
+    spawn_x: 5.23
+    spawn_y: 1.0
+    spawn_yaw: 0.0
+
+    # スタート線は無限直線なので、コースの反対側での交差を弾くために
+    # 線の近傍だけを有効にする[m]。
+    gate_half_width: 2.0
+
+    # 前回通過からこれだけ走らないと次の周回として数えない[m]。
+    # このコースは蛇行(サーペンタイン)で 1周ざっと 40〜60m。
+    # スタート線の上で往復しても周回にならないようにする下限。
+    min_lap_distance: 20.0
+
+    world_frame: "world"
+    csv_path: "/tmp/lap_trajectory.csv"
+    report_period: 5.0

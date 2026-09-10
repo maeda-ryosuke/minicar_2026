@@ -1,0 +1,149 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /LaserScan (raw)1
+        - /FTG markers1
+      SplitterRatio: 0.5
+    Tree Height: 700
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 30
+      Color: 60; 60; 60
+      Alpha: 0.5
+      Reference Frame: <Fixed Frame>
+
+    # 生スキャン。センサが実際に見ている点群(270deg 全部)。
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan (raw)
+      Enabled: true
+      Topic:
+        Value: /scan
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Best Effort
+      Style: Points
+      Size (Pixels): 3
+      Color: 200; 200; 200
+      Color Transformer: FlatColor
+      Decay Time: 0
+
+    # 前処理後。前方コーンに絞られ、5m でクリップされ、安全バブルが
+    # 0 で塗られた状態。生スキャンと重ねると FTG が何を捨てたかが見える。
+    - Class: rviz_default_plugins/LaserScan
+      Name: LaserScan (FTG filtered)
+      Enabled: true
+      Topic:
+        Value: /ftg/scan_filtered
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+      Style: Points
+      Size (Pixels): 5
+      Color: 0; 255; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+
+    # FTG の目標点(緑の球)、後輪車軸からの線、目標角度の数値。
+    - Class: rviz_default_plugins/MarkerArray
+      Name: FTG markers
+      Enabled: true
+      Topic:
+        Value: /ftg/markers
+        Depth: 10
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+
+    # 真の軌跡(緑)。シミュレータ内の実際の位置。
+    - Class: rviz_default_plugins/Path
+      Name: Path (ground truth)
+      Enabled: true
+      Topic:
+        Value: /viz/path_true
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+      Color: 0; 255; 0
+      Line Style: Lines
+      Alpha: 1
+
+    # odom の軌跡(赤)。車輪回転からの推測航法なので、スリップや衝突が
+    # あると緑から離れていく。2本の開きがそのまま odom の嘘の大きさ。
+    - Class: rviz_default_plugins/Path
+      Name: Path (odom)
+      Enabled: true
+      Topic:
+        Value: /viz/path_odom
+        Depth: 5
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+      Color: 255; 0; 0
+      Line Style: Lines
+      Alpha: 1
+
+    # MPPI の距離場。壁に近いほど濃い。ロールアウトが何を見て避けているかが
+    # そのまま見える。壁が途切れて見える場合は grid_dilate を上げる。
+    - Class: rviz_default_plugins/Map
+      Name: MPPI ESDF
+      Enabled: true
+      Topic:
+        Value: /mppi/esdf
+        Depth: 1
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+      Color Scheme: costmap
+      Alpha: 0.35
+      Draw Behind: true
+
+    # 灰の細線 = サンプル軌道(既定30本)、橙の太線 = 採用軌道。
+    # ヘアピン進入時、採用軌道が一度外へ膨らんでから切れ込めば狙いどおり。
+    - Class: rviz_default_plugins/MarkerArray
+      Name: MPPI rollouts
+      Enabled: true
+      Topic:
+        Value: /mppi/markers
+        Depth: 10
+        Durability Policy: Volatile
+        Reliability Policy: Reliable
+
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: false
+      Show Names: true
+      Marker Scale: 0.3
+
+  Global Options:
+    # world にしておくと真値・odom・スキャンが同じ座標系で重なる。
+    # gz_bridge.launch.py が world -> map の静的TF を出し、その先は
+    # SLAM の map -> odom、odom_tf_node の odom -> base_link と繋がる。
+    Fixed Frame: world
+    Background Color: 25; 25; 30
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Distance: 14
+      Pitch: 1.4
+      Yaw: 4.7
+      Focal Point:
+        X: 8
+        Y: 2.5
+        Z: 0
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 900
+  Width: 1500

@@ -1,0 +1,42 @@
+services:
+  gz:
+    image: minicar_ros:latest
+    build: ./
+    container_name: minicar_ros
+    # Default launch: Gazebo (vehicle_blue + Lidar/IMU + obstacles) と
+    # ROS2 ブリッジ(scan/imu/odom/joint state + 静的変換)を run_sim.sh で一括起動。
+    # Gazebo だけ / 別 world を試すなら CLI で上書き:
+    #   docker compose run --rm gz gz sim -v4 -r ackermann_steering.sdf
+    command: bash /run_sim.sh
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      # Force hardware Mesa; set to 1 to fall back to software rendering if the
+      # GPU path misbehaves (useful for isolating GPU vs other problems).
+      - LIBGL_ALWAYS_SOFTWARE=0
+      # include の model://vehicle_blue を解決するモデル探索パス
+      - GZ_SIM_RESOURCE_PATH=/worlds:/worlds/models
+      # 非対話 bash (docker compose exec gz bash -c "...") が読むファイル。
+      # .bashrc は対話シェルしか読まないので、そちらは Dockerfile で担当し、
+      # 非対話側をここで埋める。両方入れて初めて全パターンが source される。
+      - BASH_ENV=/opt/ros/humble/setup.bash
+    devices:
+      - /dev/dri:/dev/dri          # AMD Radeon (Mesa) render nodes
+    group_add:
+      - "110"                      # host 'render' group -> access renderD128
+      - "44"                       # host 'video' group  -> access card1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw   # X11 (XWayland) socket
+      - ./worlds:/worlds:ro                # custom SDF worlds
+      - ./launch:/launch:ro                # ros2 launch files
+      - ./config:/config:ro                # 車両諸元 / MPPI 制約パラメータ
+      - ./nodes:/nodes:ro                  # FTG / MPPI の rclpy ノード
+      - ./run_sim.sh:/run_sim.sh:ro        # gz + bridge 一括起動スクリプト
+      - ./teleop.sh:/teleop.sh:ro          # 地図作成用のキーボード手動走行
+      # SLAM の地図出力先。map_saver_cli / serialize_map が書き込むので
+      # ここだけ ro にできない。
+      - ./maps:/maps:rw
+      # 操舵測定のCSVと要約。実行ごとに日時ディレクトリを作る。
+      - ./logs:/logs:rw
+    stdin_open: true
+    tty: true

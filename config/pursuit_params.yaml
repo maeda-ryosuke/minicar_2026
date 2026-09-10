@@ -1,0 +1,25 @@
+# Pure Pursuit 制御のチューニングパラメータ。
+# 車両の物理制約（wheelbase / r_min / delta_max / a_max / v_max）は
+# vehicle_params.yaml 側から読むので、ここには書かない。
+
+pursuit_node:
+  ros__parameters:
+    # 制御周期[Hz]。/scan が 10Hz なので目標点も 10Hz でしか更新されないが、
+    # 制御は倍で回して指令の鮮度と加速度制限の粒度を確保する。
+    control_rate: 20.0
+
+    # 目標点が何秒来なければ停止するか[s]。
+    # FTG が gap 無し(緊急)と判断すると publish が止まるので、
+    # そのときの停止経路を兼ねる。scan 3周期ぶん。
+    target_timeout: 0.3
+
+    # 速度プロファイル[m/s]。曲率 0 で v_straight、
+    # 曲率が限界(1/r_min)のとき v_corner まで線形に落とす。
+    # vehicle_params の v_max=2.0 が上限。まず保守的に始める。
+    v_straight: 1.2
+    v_corner: 0.6
+
+
+    target_topic: "/ftg/target_point"
+    cmd_topic: "/cmd_vel_raw"   # 最終段は safety_node
+    vehicle_params_file: "/config/vehicle_params.yaml"

@@ -1,0 +1,17 @@
+# 可視化ノードのパラメータ。
+
+viz_node:
+  ros__parameters:
+    # odom の原点はスポーン地点なので、world に重ねるにはこの分だけ
+    # 平行移動+回転させる必要がある。
+    # world SDF の tt02 の <include><pose>5.23 1.0 0.05 0 0 0</pose> と
+    # 必ず揃えること。ここがずれると 2本の軌跡が最初から平行にずれる。
+    spawn_x: 5.23
+    spawn_y: 1.0
+    spawn_yaw: 0.0
+
+    world_frame: "world"
+
+    # 軌跡の保持点数。真値は 50Hz で出るので 4000 点で約 80 秒ぶん。
+    # 長時間走らせるときは増やす。
+    max_poses: 4000
