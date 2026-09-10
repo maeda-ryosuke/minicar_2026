@@ -1,8 +1,8 @@
 services:
   gz:
-    image: minicar_ros:latest
+    image: minicar_gazebo:latest
     build: ./
-    container_name: minicar_ros
+    container_name: minicar_gazebo
     # Default launch: Gazebo (vehicle_blue + Lidar/IMU + obstacles) と
     # ROS2 ブリッジ(scan/imu/odom/joint state + 静的変換)を run_sim.sh で一括起動。
     # Gazebo だけ / 別 world を試すなら CLI で上書き:

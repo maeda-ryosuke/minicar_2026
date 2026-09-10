@@ -1,4 +1,4 @@
-# minicar_ros
+# minicar_gazebo
 
 ROS 2 Humble + Gazebo Harmonic (gz-sim 8) を Docker で動かす最小構成。
 AMD Radeon (Mesa) の GPU パススルーで Gazebo GUI を表示する。
@@ -21,7 +21,7 @@ xhost +local:
 ## 1. ビルド
 
 ```bash
-cd ~/Docker/minicar_ros
+cd ~/Docker/minicar_gazebo
 docker compose build
 ```
 
@@ -309,7 +309,7 @@ MPPI のコア(`nodes/mppi_core.py`)は ROS 非依存なので、シミュレー
 テストできる:
 
 ```bash
-docker run --rm -v $PWD/nodes:/nodes:ro -w /nodes minicar_ros:latest \
+docker run --rm -v $PWD/nodes:/nodes:ro -w /nodes minicar_gazebo:latest \
   python3 test_mppi_core.py
 ```
 
@@ -455,7 +455,7 @@ docker compose down
 強制的に消す場合:
 
 ```bash
-docker rm -f minicar_ros
+docker rm -f minicar_gazebo
 ```
 
 ---

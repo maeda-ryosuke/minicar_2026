@@ -1,4 +1,4 @@
-# minicar_ros 進捗と計画
+# minicar_gazebo 進捗と計画
 環境: Ubuntu 22.04 / AMD Radeon 780M (Mesa, GPU描画) / ROS2 Humble + Gazebo Harmonic / Docker。
 
 ---

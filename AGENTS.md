@@ -1,8 +1,8 @@
-# minicar_ros 作業指示
+# minicar_gazebo 作業指示
 
 ## 適用範囲と目的
 
-このファイルは `minicar_ros/` 以下の全ファイルに適用する。
+このファイルは `minicar_gazebo/` 以下の全ファイルに適用する。
 
 このプロジェクトは、ROS 2 Humble と Gazebo Harmonic（gz-sim 8）を Docker 上で動かし、TT-02 相当の `tt02` 車両で Lidar・IMU・SLAM・FTG・MPPI を検証するための実験環境である。変更時は「シミュレータが起動する」だけでなく、センサ、TF、制御、安全停止、オフラインテストの契約を維持すること。
 

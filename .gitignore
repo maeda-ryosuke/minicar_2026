@@ -2,3 +2,5 @@
 *.pyc
 logs/*
 !logs/.gitkeep
+
+**/AGENTS.md
